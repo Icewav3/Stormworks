@@ -25,7 +25,14 @@ function onTick()
 	Temp = input.getNumber(3)
 	DesiredRPS = input.getNumber(4)
 	CurrentRPS = input.getNumber(5)
+    Charge = input.getNumber (6)
+    TargetRPS = math.max(GeneratorRPS, DesiredRPS)
     if DesiredRPS < 5 then
+        -- Power generator
+        if (0.25 <=Charge=> 0.1 <)
+        GeneratorRPS = 10
+        else
+        end
         airOut = 0
         fuelOut = 0
         starter = 0
@@ -36,17 +43,18 @@ function onTick()
 	elseif CurrentRPS < 3 then
 		starter = 1
     else
-        output.setNumber(1,EngineThrottle:run(DesiredRPS,CurrentRPS))
+        throttleout = (EngineThrottle:run(TargetRPS, CurrentRPS))
+        fuelOut = Fuel*throttleout
+        airOut = Air*throttleout
         starter = 0
+        --alternator
+        if Charge > 0.9
+            alternator = 0
+        else
+            alternator = 1
+        end
     end
-    -- Power generator
-    Charge = input.getNumber (6)
-    if (0.25 <=Charge=> 0.1 <)
-
-
-    else
-        
-    end
+    
 --outputs
 output.setNumber(1,airOut)
 output.setNumber(2,fuelOut)
