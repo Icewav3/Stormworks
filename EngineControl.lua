@@ -44,6 +44,7 @@
         elseif CurrentRPS < 3 then
             starter = 1
         else
+            --TODO: new calculation to optimize AFR while hitting required RPS
             throttleout = (EngineThrottle:run(TargetRPS, CurrentRPS))
             airOut = (AFRmanager:run(14,AFR))
             fuelOut = (throttleout)
