@@ -15,7 +15,8 @@
     end
     --constants
     EngineThrottle = pid(0.1,0,0)
-    AFRmanager = pid(1,0.001, 0.01)
+    AFRmanager = pid(0.1,0.00001,0.01)
+    airOut = 1
     --get variables
     function onTick()
         CurrentAir = input.getNumber(1)
@@ -46,7 +47,8 @@
         else
             --TODO: new calculation to optimize AFR while hitting required RPS
             throttleout = (EngineThrottle:run(TargetRPS, CurrentRPS))
-            airOut = (AFRmanager:run(14,AFR))
+            AFRtweak = (AFRmanager:run(14, AFR))
+            airOut = ((AFRtweak+0.1)/2)
             fuelOut = (throttleout)
             starter = 0
             --alternator
@@ -63,4 +65,7 @@
         output.setBool(1,starter)
         output.setNumber(3,alternator)
         output.setNumber(4,TargetRPS)
+        output.setNumber(5,AFR)
+        output.setNumber(6,throttleout)
+        output.setNumber(7,AFRtweak)
     end
