@@ -32,6 +32,7 @@ end
 --constants
 EngineThrottle = pid(0.01,0.00001,0.001)
 airOut = 1
+
 --get variables
 function onTick()
     CurrentAir = input.getNumber(1)
@@ -42,8 +43,8 @@ function onTick()
     CurrentRPS = input.getNumber(5)
     Charge = input.getNumber(6)
 
-    -- Power generator
-    if ((Charge < 0.25) and (Charge > 0.1)) then
+    -- Emergency power generator
+    if (Charge < 0.25) and (Charge > 0.1) then
         GeneratorRPS = 10
     else
         GeneratorRPS = 0
@@ -53,37 +54,40 @@ function onTick()
     TargetRPS = math.max(GeneratorRPS,DesiredRPS)
     if TargetRPS < 3 then
         fuelOut = 0
-        starter = 0
-        goto output
-    elseif Temp > 100 then
-        fuelOut = 0
-        starter = 0
-    elseif CurrentRPS < 3 then
-        starter = 1
+        starter = false
     else
-        throttleout = (EngineThrottle:run(TargetRPS, CurrentRPS))
-        if throttleout > 0.5 then
-            throttleout = 0.5
-        end
-        throttleout = math.abs(throttleout)
-        airOut = counter(14,AFR,0.005)
-        fuelOut = (throttleout)
-        starter = 0
-        --alternator
-        if Charge > 0.9 then
-            alternator = 0
+        if Temp > 100 then
+            fuelOut = 0
+            starter = false
+        elseif CurrentRPS < 3 then
+            starter = true
         else
-            alternator = 1
+            throttleout = (EngineThrottle:run(TargetRPS, CurrentRPS))
+            if throttleout > 0.5 then
+                throttleout = 0.5
+            end
+            starter = false
+            throttleout = math.abs(throttleout)
+            airOut = counter(14,AFR,0.005,0,1)
+            fuelOut = (throttleout)
+
+            --alternator
+            if Charge > 0.9 then
+                alternator = 0
+            else
+                alternator = 1
+            end
         end
     end
-    ::output::
-    output.setNumber(1,airOut)
-    output.setNumber(2,fuelOut)
+
+    --outputs
     output.setBool(1,starter)
-    output.setNumber(3,alternator)
-    output.setNumber(4,CurrentRPS)
-    output.setNumber(5,AFR)
-    output.setNumber(6,throttleout)
-    output.setNumber(7,AFRtweak)
+    output.setNumber(2,airOut)
+    output.setNumber(3,fuelOut)
+    output.setNumber(4,alternator)
+    output.setNumber(5,CurrentRPS)
+    output.setNumber(6,AFR)
+    output.setNumber(7,throttleout)
+    output.setNumber(8,TargetRPS)
 end
---Report bugs to Icewave#0394
+--Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issues

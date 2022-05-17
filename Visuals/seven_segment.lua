@@ -19,4 +19,4 @@ function onTick()
     output.setNumber(2,ones)
     output.setNumber(3,value)
 end
---Report bugs to Icewave#0394
+--Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issues
