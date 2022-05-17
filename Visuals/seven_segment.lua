@@ -4,8 +4,11 @@ function onTick()
         if value == nil then
             value = 0
         end
-        --TODO fix it going to -9
-        if up ~= upinput and up == true then
+        if value > 99 then
+            value = 99
+        elseif value < -9 then
+            value = -9
+        elseif up ~= upinput and up == true then
             value = value + 1
         elseif down ~= downinput and down == true then
             value = value -1
@@ -13,8 +16,12 @@ function onTick()
         end
         upinput = up
         downinput = down
-        ones = value%10
-        tens = (value-ones)/10
+        ones = math.abs(value)%10
+        if value < 0 then
+            tens = -1
+        else
+            tens = (value-ones)/10
+        end
     output.setNumber(1,tens)
     output.setNumber(2,ones)
     output.setNumber(3,value)
