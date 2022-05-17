@@ -81,13 +81,13 @@ function onTick()
     end
 
     --outputs
-    output.setBool(1,starter)
-    output.setNumber(2,airOut)
-    output.setNumber(3,fuelOut)
-    output.setNumber(4,alternator)
-    output.setNumber(5,CurrentRPS)
-    output.setNumber(6,AFR)
-    output.setNumber(7,throttleout)
-    output.setNumber(8,TargetRPS)
+    output.setNumber(1,Temp)
+    output.setNumber(2,CurrentRPS)
+    output.setNumber(3,Charge)
+    output.setNumber(4,AFR)
+    output.setBool(5,starter)
+    output.setNumber(6,airOut)
+    output.setNumber(7,fuelOut)
+    output.setNumber(8,alternator)
 end
 --Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issues
