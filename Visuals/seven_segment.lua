@@ -4,7 +4,7 @@ function onTick()
         if value == nil then
             value = 0
         end
-        
+        --TODO fix it going to -9
         if up ~= upinput and up == true then
             value = value + 1
         elseif down ~= downinput and down == true then
