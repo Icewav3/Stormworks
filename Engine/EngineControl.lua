@@ -69,7 +69,6 @@ function onTick()
             starter = false
             throttleout = math.abs(throttleout)
             airOut = counter(14,AFR,0.005,0,1)
-            fuelOut = (throttleout)
 
             --alternator
             if Charge > 0.9 then
@@ -87,7 +86,7 @@ function onTick()
     output.setNumber(4,AFR)
     output.setBool(5,starter)
     output.setNumber(6,airOut)
-    output.setNumber(7,fuelOut)
+    output.setNumber(7,throttleout)
     output.setNumber(8,alternator)
 end
 --Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issues
