@@ -55,15 +55,14 @@ function onTick()
     if TargetRPS < 3 then
         fuelOut = 0
         starter = false
-    else
-        if Temp > 100 then
-            fuelOut = 0
-            starter = false
-        elseif CurrentRPS < 3 then
+    else 
+        if CurrentRPS < 3 then
             starter = true
         else
             throttleout = (EngineThrottle:run(TargetRPS, CurrentRPS))
-            if throttleout > 0.5 then
+            if Temp > 100 then
+                fuelOut = 0
+            elseif throttleout > 0.5 then
                 throttleout = 0.5
             end
             starter = false
