@@ -17,11 +17,11 @@ function counter(desired,current,sensitivity,min,max)
     if counter_out == nil then
         counter_out = 0
     end
-    if counter_out >= max then
+    if counter_out > max then
         counter_out = max
     elseif current < desired then
         counter_out = counter_out + sensitivity
-    elseif counter_out <= min then
+    elseif counter_out < min then
         counter_out = min
     elseif current > desired then
         counter_out = counter_out - sensitivity
@@ -56,25 +56,26 @@ function onTick()
         fuelOut = 0
         starter = false
     else 
-        if CurrentRPS < 2 then
+        if (CurrentRPS < 3) or (CurrentRPS == nil) then
             starter = true
         else
-            throttleout = (EngineThrottle:run(TargetRPS, CurrentRPS))
-            if Temp > 100 then
-                fuelOut = 0
-            elseif throttleout > 0.5 then
-                throttleout = 0.5
-            end
-            starter = false
-            throttleout = math.abs(throttleout)
-            airOut = counter(14,AFR,0.005,0,1)
-
-            --alternator
-            if Charge > 0.9 then
-                alternator = 0
-            else
-                alternator = 1
-            end
+            starter = false 
+        end
+        throttleout = math.abs(EngineThrottle:run(TargetRPS, CurrentRPS))
+        if Temp > 100 then
+            throttleout = 0
+        elseif throttleout > 0.5 then
+            throttleout = 0.5
+        else
+        end
+        --AFR optimizier
+        airOut = counter(14,AFR,0.005,0,1)
+        
+        --alternator
+        if Charge > 0.9 then
+            alternator = 0
+        else
+            alternator = 1
         end
     end
 
