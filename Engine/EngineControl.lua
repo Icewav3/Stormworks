@@ -1,4 +1,4 @@
---functions
+--v 1.0
 function pid(p,i,d)
     return{p=p,i=i,d=d,E=0,D=0,I=0,
         run=function(s,sp,pv)

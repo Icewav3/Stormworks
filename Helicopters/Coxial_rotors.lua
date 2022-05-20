@@ -1,14 +1,8 @@
 function onTick()
     vertical = input.getNumber(1)
     yaw = input.getNumber(2)
-    if yaw ~= 0 then
-        top_rotor = vertical
-        btm_rotor = vertical*-1
-    end
-    if vertical ~= 0 then
-        top_rotor = vertical
-        btm_rotor = vertical
-    end
+    btm_rotor = vertical + (yaw*-1)
+    top_rotor = vertical + yaw
     output.setNumber(1,top_rotor)
     output.setNumber(2,btm_rotor)
 end
