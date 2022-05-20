@@ -10,7 +10,7 @@ function onTick()
         if value > gearmax then
             value = gearmax
         elseif value < gearmin then
-            value = -gearmin
+            value = gearmin
         elseif up ~= upinput and up == true then
             value = value + 1
         elseif down ~= downinput and down == true then
