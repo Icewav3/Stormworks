@@ -7,9 +7,9 @@ function onTick()
         if value == nil then
             value = 0
         end
-        if value >= gearmax then
+        if value > gearmax then
             value = gearmax
-        elseif value <= gearmin then
+        elseif value < gearmin then
             value = -gearmin
         elseif up ~= upinput and up == true then
             value = value + 1
@@ -24,6 +24,11 @@ function onTick()
             clutch = 0
         end
         --gears
+        reverse = false
+        gear1 = false
+        gear2 = false
+        gear3 = false
+        gear4 = false
         if value == -1 then
             reverse = true
         elseif value == 1 then
