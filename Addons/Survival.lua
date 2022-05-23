@@ -40,10 +40,28 @@ function onPlayerDie(steam_id, name, peer_id, is_admin, is_auth)
     print(name .. " has a massive skill issue")
 end
 
-function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost) 
-    
+--write
+g_savedata = {
+    spawned_vehicles = {}
+  }
+  
+  function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost)
+    g_savedata.spawned_vehicles[vehicle_id] = {
+      peer_id = peer_id,
+      transform = matrix.translate(x, y, z),
+      cost = cost
+    }
+  end
 end
 
+--recall function
+
+local vehicle_id = 1
+if g_savedata.spawned_vehicles[vehicle_id] then
+  -- this vehicle exists
+end
+
+--todo clean
 function onVehicleDespawn(vehicle_id, peer_id)
     
 end
