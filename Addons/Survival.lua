@@ -1,8 +1,7 @@
 --functions
-function = write()
+function write(input)
 end
-function = read()
-    if 
+function read(input)
 end
 ---@param peer_id integer the peer_id of the player you want to get the steam id of
 ---@return string steam_id the steam id of the player, nil if not found
@@ -18,7 +17,7 @@ function getSteamID(peer_id)
 end
 
 function print(msg, to_player)
-    server.announce(server.getAddonData((s.getAddonIndex())).name, tostring(msg), to_player)
+    server.announce(server.getAddonData((server.getAddonIndex())).name, tostring(msg), to_player)
 end
 
 -- g_savedata table that persists between game sessions
@@ -30,15 +29,15 @@ function onTick(game_ticks)
 end
 
 function onPlayerJoin(steam_id, name, peer_id, admin, auth)
-	server.announce("[Server]", name .. " has no bitches")
+    print(name .. " has no bitches")
 end
 
 function onPlayerLeave(steam_id, name, peer_id, admin, auth)
-	server.announce("[Server]", name .. " is going to touch grass")
+    print(name .. " is going to touch grass")
 end
 
 function onPlayerDie(steam_id, name, peer_id, is_admin, is_auth)
-    server.announce("[Server]", name .. " has a massive skill issue")
+    print(name .. " has a massive skill issue")
 end
 
 function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost) 
@@ -52,11 +51,8 @@ end
 function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command, one, two, three, four, five)
 
 	if (command == "?days") then
-		server.announce("[Server]", server.getDateValue() .. " days have passed.")
+        print(server.getDateValue() .. " days have passed.")
 	end
-    if (command == "?id") then
-        server.announce("[Server]", server.getCharacterVehicle(object_id) .. " is the vehicle ID")
-    end
     --admin only commands
     if is_admin == true then
         if (command == "?restore") then
