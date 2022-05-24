@@ -46,11 +46,16 @@ g_savedata = {
   }
   
   function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost)
+    steamid = getSteamID(peer_id)
+    print("logged")
+    print(vehicle_id)
     g_savedata.spawned_vehicles[vehicle_id] = {
-      peer_id = peer_id,
-      transform = matrix.translate(x, y, z),
-      cost = cost
+        steamid = steamid,
+        transform = matrix.translation(x, y, z),
+        cost = cost
     }
+    function onVehicleDespawn(vehicle_id, peer_id)
+        g_savedata.spawned_vehicles[vehicle_id] = {0}
   end
 end
 
@@ -58,13 +63,10 @@ end
 
 local vehicle_id = 1
 if g_savedata.spawned_vehicles[vehicle_id] then
+    print(vehicle_id .. " works")
   -- this vehicle exists
 end
 
---todo clean
-function onVehicleDespawn(vehicle_id, peer_id)
-    
-end
 
 function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command, one, two, three, four, five)
 
