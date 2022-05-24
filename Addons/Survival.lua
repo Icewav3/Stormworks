@@ -54,9 +54,10 @@ g_savedata = {
         transform = matrix.translation(x, y, z),
         cost = cost
     }
-    function onVehicleDespawn(vehicle_id, peer_id)
-        g_savedata.spawned_vehicles[vehicle_id] = {0}
-  end
+end
+
+function onVehicleDespawn(vehicle_id, peer_id)
+    g_savedata.spawned_vehicles[vehicle_id] = nil
 end
 
 --recall function
