@@ -1,10 +1,3 @@
---functions
-function write(input)
-end
-function read(input)
-end
----@param peer_id integer the peer_id of the player you want to get the steam id of
----@return string steam_id the steam id of the player, nil if not found
 function getSteamID(peer_id)
     local player_list =  server.getPlayers()
     for peer_index, peer in pairs(player_list) do
@@ -12,7 +5,7 @@ function getSteamID(peer_id)
             return tostring(peer.steam_id)
         end
     end
-    server.announce("(getSteamID) unable to get steam_id for peer_id: "..peer_id, true, 1)
+    server.announce("(getSteamID) unable to get steam_id for peer_id: ".. peer_id, true, 1)
     return nil
 end
 
@@ -20,16 +13,13 @@ function print(msg, to_player)
     server.announce(server.getAddonData((server.getAddonIndex())).name, tostring(msg), to_player)
 end
 
--- g_savedata table that persists between game sessions
-g_savedata = {}
-
--- Tick function that will be executed every logic tick
-function onTick(game_ticks)
-
-end
-
 function onPlayerJoin(steam_id, name, peer_id, admin, auth)
+    if admin == true then
+        print("The almighty " .. name " is upon us!")
+        server.setTutorial(false)
+    else
     print(name .. " has no bitches")
+    end
 end
 
 function onPlayerLeave(steam_id, name, peer_id, admin, auth)
@@ -43,12 +33,11 @@ end
 --write
 g_savedata = {
     spawned_vehicles = {}
-  }
-  
-  function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost)
+}
+
+function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost)
     steamid = getSteamID(peer_id)
-    print("logged")
-    print(vehicle_id)
+    print("logged: " .. vehicle_id)
     g_savedata.spawned_vehicles[vehicle_id] = {
         steamid = steamid,
         transform = matrix.translation(x, y, z),
@@ -60,26 +49,41 @@ function onVehicleDespawn(vehicle_id, peer_id)
     g_savedata.spawned_vehicles[vehicle_id] = nil
 end
 
---recall function
-
-local vehicle_id = 1
-if g_savedata.spawned_vehicles[vehicle_id] then
-    print(vehicle_id .. " works")
-  -- this vehicle exists
-end
-
-
 function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command, one, two, three, four, five)
 
-	if (command == "?days") then
+    if (command == "?days") then
         print(server.getDateValue() .. " days have passed.")
-	end
     --admin only commands
-    if is_admin == true then
+    elseif is_admin == true then
         if (command == "?restore") then
+            if one ~= nil then
+                server.resetVehicleState(one)
+                print ("Successful, vehicle reset")
+            else
+                print("Error: no vehicle ID")
+            end
+        elseif (command == "?refund") then
+            if one ~= nil then
+                current_money = server.getCurrency()
+                for vehicle_id, data in pairs(g_savedata.spawned_vehicles) do
+                    money = (current_money + data.cost)
+                    server.setCurrency(money, server.getResearchPoints())
+                    print ("Vehicle cost: " .. data.cost)
+                    print ("Successful, vehicle refunded")
+                    server.despawnVehicle(one, true)
+                end
+            else
+                print("Error: no vehicle ID")
+            end
+        elseif command == "?settings" then
+            print (server.getGameSettings())
+            --list vehicles
+        elseif command == "?list" then
+            for vehicle_id, data in pairs(g_savedata.spawned_vehicles) do
+                print(vehicle_id .. " " .. data.steamid)
+            end
+        else
+            print("Valid commands are as follows:\n?refund\n?restore\n?list\n?days" )
         end
     end
-
-
-
 end
