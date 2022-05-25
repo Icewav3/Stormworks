@@ -82,14 +82,17 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
                 print(setting..": "..tostring(value))
             end
         elseif command =="?setting" then
-            if (one ~= nil) and (two ~= nil) then
-                for setting, one in pairs(game_setting) do
-                server.setGameSetting(one, two)
-                print(one .. " set to " .. two)
-                end
-            else
-            print ("Error: No setting value")
-            end
+            if not two then print("Error: Invalid number of arguments"); return end
+        
+            local game_setting = server.getGameSettings()
+            if game_setting[one] == nil then print("Error: Setting "..one.." does not exist!"); return end
+        
+            two = tonumber(two) or two == "true" or false
+            server.setGameSetting(one, two)
+            
+            local game_setting = server.getGameSettings()
+            print("Set "..one.." to "..tostring(game_setting[one]))
+
             --list vehicles
         elseif command == "?list" then
             for vehicle_id, data in pairs(g_savedata.spawned_vehicles) do
@@ -100,3 +103,5 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
         end
     end
 end
+--Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issues
+--Huge thanks to Toastery#2075 for helping me with this!
