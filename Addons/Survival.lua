@@ -75,8 +75,21 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
             else
                 print("Error: no vehicle ID")
             end
+        --game settings
         elseif command == "?settings" then
-            print (server.getGameSettings())
+            local game_setting = server.getGameSettings()
+            for setting, value in pairs(game_setting) do
+                print(setting..": "..tostring(value))
+            end
+        elseif command =="?setting" then
+            if (one ~= nil) and (two ~= nil) then
+                for setting, one in pairs(game_setting) do
+                server.setGameSetting(one, two)
+                print(one .. " set to " .. two)
+                end
+            else
+            print ("Error: No setting value")
+            end
             --list vehicles
         elseif command == "?list" then
             for vehicle_id, data in pairs(g_savedata.spawned_vehicles) do
