@@ -15,7 +15,7 @@ end
 
 function onPlayerJoin(steam_id, name, peer_id, admin, auth)
     if admin == true then
-        print("The almighty " .. name " is upon us!")
+        print("The almighty " .. name .. " is upon us!")
         server.setTutorial(false)
     else
     print(name .. " has no bitches")
