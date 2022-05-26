@@ -63,19 +63,32 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
                 print("Error: no vehicle ID")
             end
         elseif (command == "?refund") then
-            if one ~= nil then
-                current_money = server.getCurrency()
-                for vehicle_id, data in pairs(g_savedata.spawned_vehicles) do
-                    money = (current_money + data.cost)
-                    server.setCurrency(money, server.getResearchPoints())
-                    print ("Vehicle cost: " .. data.cost)
-                    print ("Successful, vehicle refunded")
-                    server.despawnVehicle(one, true)
-                end
-            else
-                print("Error: no vehicle ID")
+
+            -- return if the input is invalid 
+            if not tonumber(one) then
+                print("Error: vehicle_id must be a number!")
+                return
             end
-        --game settings
+        
+            one = tonumber(one)
+        
+            -- return if the vehicle id sent is not in the database
+            if not g_savedata.spawned_vehicles[one] then
+                print("Error: Unknown vehicle_id: "..one)
+                return
+            end
+        
+            -- get the new blance
+            local money = server.getCurrency() + g_savedata.spawned_vehicles[one].cost
+            print("New Balance: "..money)
+            server.setCurrency(money, server.getResearchPoints())
+        
+            print("Vehicle cost: "..g_savedata.spawned_vehicles[one].cost)
+            print("Successful, vehicle refunded")
+        
+            -- refund the vehicle's cost
+            server.despawnVehicle(one, true)
+
         elseif command == "?settings" then
             local game_setting = server.getGameSettings()
             for setting, value in pairs(game_setting) do
@@ -96,7 +109,7 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
             --list vehicles
         elseif command == "?list" then
             for vehicle_id, data in pairs(g_savedata.spawned_vehicles) do
-                print(vehicle_id .. " " .. data.steamid)
+                print(vehicle_id .. " " .. tostring(data.steamid) .. " $" .. tostring(data.cost))
             end
         else
             print("Valid commands are as follows:\n?refund\n?restore\n?list\n?days" )
