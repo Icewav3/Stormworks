@@ -9,9 +9,3 @@ function counter(desired,current,sensitivity)
     end
     return counter_out
 end
-
---[[testing
-function onTick()
-    c=counter(14,1,1)
-    output.setNumber(1,c)
-end]]

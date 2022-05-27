@@ -30,7 +30,7 @@ function counter(desired,current,sensitivity,min,max)
 end
 
 --constants
-EngineThrottle = pid(0.2,0.00001,0.5)
+EngineThrottle = pid(0.2,0.00001,0.1)
 airOut = 1
 
 --get variables
