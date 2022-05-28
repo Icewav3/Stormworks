@@ -1,6 +1,6 @@
 --do not go below -9 or above 99
-gearmin = -1
-gearmax = 4
+gearmin = -3
+gearmax = 9
 function onTick()
     up = input.getBool(3)
     down = input.getBool(4)
@@ -25,20 +25,82 @@ function onTick()
         end
         --gears
         reverse = false
-        gear1 = false
-        gear2 = false
-        gear3 = false
-        gear4 = false
+        gear6_5 = false
+        gear3_2 = false
+        gear9_5 = false
+        gear2_1 = false
         if value == -1 then
             reverse = true
+            gear6_5 = false
+            gear3_2 = false
+            gear9_5 = false
+            gear2_1 = false
+        elseif value == -1 then
+            reverse = true
+            gear6_5 = true
+            gear3_2 = false
+            gear9_5 = false
+            gear2_1 = false
+        elseif value == -2 then
+            reverse = true
+            gear6_5 = false
+            gear3_2 = true
+            gear9_5 = false
+            gear2_1 = false
         elseif value == 1 then
-            gear1 = true
+            reverse = false
+            gear6_5 = true
+            gear3_2 = false
+            gear9_5 = false
+            gear2_1 = false
         elseif value == 2 then
-            gear2 = true
+            reverse = false
+            gear6_5 = false
+            gear3_2 = true
+            gear9_5 = false
+            gear2_1 = false
         elseif value == 3 then
-            gear3 = true
+            reverse = false
+            gear6_5 = false
+            gear3_2 = false
+            gear9_5 = true
+            gear2_1 = false
         elseif value == 4 then
-            gear4 = true
+            reverse = false
+            gear6_5 = false
+            gear3_2 = false
+            gear9_5 = false
+            gear2_1 = true
+        elseif value == 5 then
+            reverse = false
+            gear6_5 = true
+            gear3_2 = false
+            gear9_5 = false
+            gear2_1 = true
+        elseif value == 6 then
+            reverse = false
+            gear6_5 = false
+            gear3_2 = true
+            gear9_5 = false
+            gear2_1 = true
+        elseif value == 7 then
+            reverse = false
+            gear6_5 = false
+            gear3_2 = false
+            gear9_5 = true
+            gear2_1 = true
+        elseif value == 8 then
+            reverse = false
+            gear6_5 = true
+            gear3_2 = false
+            gear9_5 = true
+            gear2_1 = true
+        elseif value == 9 then
+            reverse = false
+            gear6_5 = true
+            gear3_2 = true
+            gear9_5 = true
+            gear2_1 = true
         end
         upinput = up
         downinput = down

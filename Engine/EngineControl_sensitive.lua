@@ -1,18 +1,21 @@
 --v 1.1
-function pid(p,i,d)
-    return{p=p,i=i,d=d,E=0,D=0,I=0,
+function pid(p,i,d,z)
+    return{p=p,i=i,d=d,z=z or 1,E=0,D=0,I=0,
         run=function(s,sp,pv)
             local E,D,A
             E = sp-pv
             D = E-s.E
-            A = math.abs(D-s.D)
+            A = E<0 and -1 or 1
             s.E = E
+            s.I = A*(D-s.D)<0 and s.I*s.z or s.I +E*s.i
             s.D = D
-            s.I = A<E and s.I +E*s.i or s.I*0.5
-            return E*s.p +(A<E and s.I or 0) +D*s.d
+            
+            return E*s.p +s.I +D*s.d
         end
     }
 end
+--Credit to Tajin#0148 for the PID code
+
 function counter(desired,current,sensitivity,min,max)
     if counter_out == nil then
         counter_out = 0
@@ -30,7 +33,7 @@ function counter(desired,current,sensitivity,min,max)
 end
 
 --constants
-EngineThrottle = pid(0.2,0.00001,0.1)
+EngineThrottle = pid(0.2,0.00001,0.1, 0.2)
 airOut = 1
 
 --get variables
@@ -56,12 +59,12 @@ function onTick()
         throttleout = 0
         starter = false
     else 
-        if (CurrentRPS < 3) or (CurrentRPS == nil) then
+        if (CurrentRPS < 2) or (CurrentRPS == nil) then
             starter = true
         else
             starter = false 
         end
-        throttleout = math.abs(EngineThrottle:run(TargetRPS, CurrentRPS))
+        throttleout = EngineThrottle:run(TargetRPS, CurrentRPS)
         if Temp > 100 then
             throttleout = 0
         elseif throttleout > 0.5 then
