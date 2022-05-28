@@ -1,18 +1,20 @@
 --v 1.0
-function pid(p,i,d)
-    return{p=p,i=i,d=d,E=0,D=0,I=0,
+function pid(p,i,d,z)
+    return{p=p,i=i,d=d,z=z or 1,E=0,D=0,I=0,
         run=function(s,sp,pv)
             local E,D,A
             E = sp-pv
             D = E-s.E
-            A = math.abs(D-s.D)
+            A = E<0 and -1 or 1
             s.E = E
+            s.I = A*(D-s.D)<0 and s.I*s.z or s.I +E*s.i
             s.D = D
-            s.I = A<E and s.I +E*s.i or s.I*0.5
-            return E*s.p +(A<E and s.I or 0) +D*s.d
+            
+            return E*s.p +s.I +D*s.d
         end
     }
 end
+--Credit to Tajin#0148 for the PID code
 
 function counter(desired,current,sensitivity,min,max)
     if counter_out == nil then
