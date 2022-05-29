@@ -24,48 +24,43 @@ function onTick()
             clutch = 0
         end
         --gears
-        reverse = false
-        gear6_5 = false
-        gear3_2 = false
-        gear9_5 = false
-        gear2_1 = false
         if value == -1 then
             reverse = true
             gear6_5 = false
             gear3_2 = false
             gear9_5 = false
             gear2_1 = false
-        elseif value == -1 then
-            reverse = true
-            gear6_5 = true
-            gear3_2 = false
-            gear9_5 = false
-            gear2_1 = false
         elseif value == -2 then
             reverse = true
+            gear6_5 = true
+            gear3_2 = false
+            gear9_5 = false
+            gear2_1 = false
+        elseif value == -3 then
+            reverse = true
             gear6_5 = false
             gear3_2 = true
             gear9_5 = false
             gear2_1 = false
-        elseif value == 1 then
+        elseif value == 9 then
             reverse = false
             gear6_5 = true
             gear3_2 = false
             gear9_5 = false
             gear2_1 = false
-        elseif value == 2 then
+        elseif value == 8 then
             reverse = false
             gear6_5 = false
             gear3_2 = true
             gear9_5 = false
             gear2_1 = false
-        elseif value == 3 then
+        elseif value == 7 then
             reverse = false
             gear6_5 = false
             gear3_2 = false
             gear9_5 = true
             gear2_1 = false
-        elseif value == 4 then
+        elseif value == 6 then
             reverse = false
             gear6_5 = false
             gear3_2 = false
@@ -77,25 +72,25 @@ function onTick()
             gear3_2 = false
             gear9_5 = false
             gear2_1 = true
-        elseif value == 6 then
+        elseif value == 4 then
             reverse = false
             gear6_5 = false
             gear3_2 = true
             gear9_5 = false
             gear2_1 = true
-        elseif value == 7 then
+        elseif value == 3 then
             reverse = false
             gear6_5 = false
             gear3_2 = false
             gear9_5 = true
             gear2_1 = true
-        elseif value == 8 then
+        elseif value == 2 then
             reverse = false
             gear6_5 = true
             gear3_2 = false
             gear9_5 = true
             gear2_1 = true
-        elseif value == 9 then
+        elseif value == 1 then
             reverse = false
             gear6_5 = true
             gear3_2 = true
