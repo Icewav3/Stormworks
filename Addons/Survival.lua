@@ -36,13 +36,23 @@ g_savedata = {
 }
 
 function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost)
-    steamid = getSteamID(peer_id)
-    print("logged: " .. vehicle_id)
-    g_savedata.spawned_vehicles[vehicle_id] = {
-        steamid = steamid,
-        transform = matrix.translation(x, y, z),
-        cost = cost
+    if g_savedata == nil then
+    g_savedata = {
+        spawned_vehicles = {}
     }
+    else
+    end
+    steamid = getSteamID(peer_id)
+        if steamid ~= nil then
+        print("logged: " .. vehicle_id)
+        g_savedata.spawned_vehicles[vehicle_id] = {
+            steamid = steamid,
+            transform = matrix.translation(x, y, z),
+            cost = cost
+        }
+        else
+        print("Ai vehicle spawned - not logged")
+        end
 end
 
 function onVehicleDespawn(vehicle_id, peer_id)
@@ -62,6 +72,11 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
             else
                 print("Error: no vehicle ID")
             end
+        elseif (command == "?clean_players" ) then
+            server.cleanVehicles()
+        elseif (command == "?debug_wipe") then
+            g_savedata.spawned_vehicles={nil}
+            print("save data wiped")
         elseif (command == "?refund") then
 
             -- return if the input is invalid 
