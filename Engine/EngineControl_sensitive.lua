@@ -1,20 +1,30 @@
---v 1.1
-function pid(p,i,d,z)
-    return{p=p,i=i,d=d,z=z or 1,E=0,D=0,I=0,
-        run=function(s,sp,pv)
-            local E,D,A
-            E = sp-pv
-            D = E-s.E
-            A = E<0 and -1 or 1
-            s.E = E
-            s.I = A*(D-s.D)<0 and s.I*s.z or s.I +E*s.i
-            s.D = D
-            
-            return E*s.p +s.I +D*s.d
+--v 1.2
+pid = {
+    prev_err=prev_err or 0;
+    p_out=p_out or 0;
+    i_out=i_out or 0;
+    d_out=d_out or 0
+}
+function pid:run(min_setpoint, setpoint, current, p, i, d)
+    current = current or 0
+    if setpoint > min_setpoint then
+        if current > setpoint*0.1 + setpoint then
+            pid.i_out = pid.i_out / 2
         end
-    }
+        err = setpoint - current
+        pid.p_out = err * p
+        pid.i_out = (err * i) + pid.i_out
+        pid.d_out = (err - pid.prev_err) * d
+        pid.prev_err = err
+    else
+        pid.prev_err = 0
+        pid.p_out = 0
+        pid.i_out = 0 
+        pid.d_out = 0
+    end
+    out = pid.p_out + pid.i_out + pid.d_out
+    return out
 end
---Credit to Tajin#0148 for the PID code
 
 function counter(desired,current,sensitivity,min,max)
     if counter_out == nil then
@@ -33,9 +43,8 @@ function counter(desired,current,sensitivity,min,max)
 end
 
 --constants
-EngineThrottle = pid(0.2,0.00001,0.1, 0.2)
 airOut = 1
-
+minRPS = 2.1
 --get variables
 function onTick()
     CurrentAir = input.getNumber(1)
@@ -55,16 +64,16 @@ function onTick()
 
     -- Engine throttler
     TargetRPS = math.max(GeneratorRPS,DesiredRPS)
-    if TargetRPS < 3 then
+    if TargetRPS < minRPS then
         throttleout = 0
         starter = false
     else 
-        if (CurrentRPS < 2) or (CurrentRPS == nil) then
+        if (CurrentRPS < minRPS) or (CurrentRPS == nil) then
             starter = true
         else
             starter = false 
         end
-        throttleout = EngineThrottle:run(TargetRPS, CurrentRPS)
+        throttleout = pid:run(minRPS, TargetRPS, CurrentRPS, 0.2, 0.0001, 0.1)
         if Temp > 100 then
             throttleout = 0
         elseif throttleout > 0.5 then
