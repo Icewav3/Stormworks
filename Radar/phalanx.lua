@@ -47,6 +47,7 @@ function onTick()
     T8elev=input.getNumber(31)
     T8time=input.getNumber(32)
 
+    
     output.setNumber(1,top_rotor)
     output.setNumber(2,btm_rotor)
 end
