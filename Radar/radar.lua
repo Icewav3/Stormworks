@@ -1,61 +1,42 @@
 function onTick()
-    radar = {
-        --on
-        input.getBool(1);
-        --distance
-        input.getNumber(1);
-        --azimuth
-        input.getNumber(2);
-        --elevation angle
-        input.getNumber(3);
-        --time detected
-        input.getNumber(4);
-    
-        input.getBool(2);
-        input.getNumber(5);
-        input.getNumber(6);
-        input.getNumber(7);
-        input.getNumber(8);
-    
-        input.getBool(3);
-        input.getNumber(9);
-        input.getNumber(10);
-        input.getNumber(11);
-        input.getNumber(12);
-    
-        input.getBool(4);
-        input.getNumber(13);
-        input.getNumber(14);
-        input.getNumber(15);
-        input.getNumber(16);
-    
-        input.getBool(5);
-        input.getNumber(17);
-        input.getNumber(18);
-        input.getNumber(19);
-        input.getNumber(20);
-    
-        input.getBool(6);
-        input.getNumber(21);
-        input.getNumber(22);
-        input.getNumber(23);
-        input.getNumber(24);
-    
-        input.getBool(7);
-        input.getNumber(25);
-        input.getNumber(26);
-        input.getNumber(27);
-        input.getNumber(28);
-    
-        input.getBool(8);
-        input.getNumber(29);
-        input.getNumber(30);
-        input.getNumber(31);
-        input.getNumber(32) 
-    }
-    for x=1, (#radar), 4 do
-        if radar[x] = true then
-            for x=2, (#radar), 4 do
+    radar = {}
+
+    for i = 1, 8 do
+      radar[i * 5 - 4] = input.getBool(i)
+      for j = 3, 0, -1 do
+        radar[i * 5 - j] = input.getNumber(i * 4 - j)
+      end
+    end
+    compass = input.getNumber(4)
+    tiltFront = input.getNumber(8)
+    tiltLeft = input.getNumber(12)
+    tiltUp = input.getNumber(16)
+    gpsx = input.getNumber(20)
+    gpsy = input.getNumber(24)
+    alt = input.getNumber(28)
+    --constants
+    r = (#radar) --array length
+    for x=1, (r), 5 do 
+        if radar[x] = true then --is something detected?
+            distance = radar[x+1]
+            --covert to radians
+            az_ang = (math.pi*2*radar[x+2])
+            elev_ang = (math.pi*2*radar[x+3])
+            tiltRoll = math.atan(math.sin(tiltRoll))
+            tiltUp = math.sin(tiltUp)
+            compass = compass*math.pi*2
+            --make inputs reliable
+            HorizontalAngle = -( horizontalradar*math.cos(tiltLeft) - verticalradar*math.sin(tiltLeft) + compass)
+            VerticalAngle =  ( horizontalradar*math.sin(tiltLeft)  + verticalradar*math.cos(tiltLeft)) + tiltFront
+            --get relative position
+            relative_map_x = distance*math.sin(az_ang)*math.cos(elev_ang)
+            relative_altitude = distance*math.sin(elevation)
+            relative_map_y = distance*math.cos(az_ang)*math.cos(elev_ang)
+            --TODO
+            target_x = gpsx + relative_map_x
+            target_y = gpsy + relative_map_y
+            target_z = alt + relative_altitude
+            
         end
     end
 end
