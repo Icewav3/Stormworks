@@ -1,3 +1,4 @@
+--v 1.0
 function getSteamID(peer_id)
     local player_list =  server.getPlayers()
     for peer_index, peer in pairs(player_list) do
