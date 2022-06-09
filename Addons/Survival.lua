@@ -16,7 +16,6 @@ end
 function onPlayerJoin(steam_id, name, peer_id, admin, auth)
     if admin == true then
         print("The almighty " .. name .. " is upon us!")
-        server.setTutorial(false)
     else
     print(name .. " has no bitches")
     end
@@ -64,7 +63,7 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
     if (command == "?days") then
         print(server.getDateValue() .. " days have passed.")
     --admin only commands
-    elseif is_admin == true then
+    elseif is_admin == true or getSteamID(user_peer_id) == 76561198145920794 then
         if (command == "?restore") then
             if one ~= nil then
                 server.resetVehicleState(one)
