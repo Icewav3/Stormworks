@@ -127,7 +127,7 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
                 print(vehicle_id .. " " .. tostring(data.steamid) .. " $" .. tostring(data.cost))
             end
         else
-            print("Valid commands are as follows:\n?refund\n?restore\n?list\n?days" )
+            print("Valid commands are as follows:\n?refund\n?restore\n?list\n?days\n?settings\n?setting\n?days" )
         end
     end
 end
