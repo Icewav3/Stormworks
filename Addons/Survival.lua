@@ -1,4 +1,4 @@
---v 1.0
+--v 1.1
 function getSteamID(peer_id)
     local player_list =  server.getPlayers()
     for peer_index, peer in pairs(player_list) do
@@ -20,6 +20,22 @@ function onPlayerJoin(steam_id, name, peer_id, admin, auth)
     else
     print(name .. " has no bitches")
     end
+end
+--DISASTER WARNINGS
+function onTornado(transform)
+    print("Tornado imminent")
+end
+function onWhirlpool(transform, magnitude)
+    print("Whirlpool imminent "  .. "Magnitude: " .. magnitude)
+end
+function onMeteor(transform, magnitude)
+    print("Asteroid impact imminent " .. "Magnitude: " .. magnitude)
+end
+function onTsunami(transform, magnitude)
+    print("Tsunami imminent " .. "Magnitude: " .. magnitude)
+end
+function onVolcano(transform)
+    print("Volcanic eruption imminent")
 end
 
 function onPlayerLeave(steam_id, name, peer_id, admin, auth)
@@ -64,7 +80,7 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
     if (command == "?days") then
         print(server.getDateValue() .. " days have passed.")
     --admin only commands
-    elseif is_admin == true or getSteamID(user_peer_id) == 76561198145920794 then
+    elseif is_admin == true then
         if (command == "?restore") then
             if one ~= nil then
                 server.resetVehicleState(one)
