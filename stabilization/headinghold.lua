@@ -1,23 +1,27 @@
---talk to nerds on SW discord about scripts reloading and breaking
-pid = {
-    prev_err=prev_err or 0;
-    p_out=p_out or 0;
-    i_out=i_out or 0;
-    d_out=d_out or 0
-}
-function pid:run(setpoint, current, p, i, d)
-        if current > setpoint*0.1 + setpoint then
-            pid.i_out = 0
+function PID(p, i, d)
+    return {
+        p = p,
+        i = i,
+        d = d,
+        i_out = 0,
+        prev_err = 0,
+        run = function(self, setpoint, current)
+            if current > setpoint * 0.1 + setpoint then
+                self.i_out = 0
+            end
+            err = setpoint - current
+            p_out = err * self.p
+            self.i_out = (err * self.i) + self.i_out
+            d_out = (err - self.prev_err) * self.d
+            self.prev_err = err
+            out = p_out + self.i_out + d_out
+            return out
         end
-        err = setpoint - current
-        pid.p_out = err * p
-        pid.i_out = (err * i) + pid.i_out
-        pid.d_out = (err - pid.prev_err) * d
-        pid.prev_err = err
-    	out = pid.p_out + pid.i_out + pid.d_out
-    return out or 0
+    }
 end
-
+--constants
+pid1=PID(1, 0.01, 0.1)
+target = 0
 function onTick()
     steering = input.getNumber(1)
     compass = input.getNumber(2)
@@ -26,7 +30,7 @@ function onTick()
         steer_out = steering
         target = compass
     else
-        steer_out = pid:run((target-compass+0.5)%1-0.5, 0, 1, 0.01, 0.1) or 0
+        steer_out = pid1:run( 0, (target-compass+0.5)%1-0.5)
     end
     output.setNumber(1,steer_out)
 end
