@@ -1,4 +1,4 @@
---v 1.1
+--v 1.2
 function getSteamID(peer_id)
     local player_list =  server.getPlayers()
     for peer_index, peer in pairs(player_list) do
@@ -6,12 +6,12 @@ function getSteamID(peer_id)
             return tostring(peer.steam_id)
         end
     end
-    server.announce("(getSteamID) unable to get steam_id for peer_id: ".. peer_id, true, 1)
+    --server.announce("(getSteamID) unable to get steam_id for peer_id: ".. peer_id, true, 0)
     return nil
 end
 
 function print(msg, to_player)
-    server.announce(server.getAddonData((server.getAddonIndex())).name, tostring(msg), to_player)
+    server.announce(server.getAddonData((server.getAddonIndex())).name, tostring(msg), -1)
 end
 
 function onPlayerJoin(steam_id, name, peer_id, admin, auth)
@@ -67,7 +67,7 @@ function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost)
             cost = cost
         }
         else
-        print("Ai vehicle spawned - not logged")
+        --print("Ai vehicle spawned - not logged")
         end
 end
 
