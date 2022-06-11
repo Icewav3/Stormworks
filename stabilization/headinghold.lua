@@ -1,3 +1,4 @@
+--talk to nerds on SW discord about scripts reloading and breaking
 pid = {
     prev_err=prev_err or 0;
     p_out=p_out or 0;

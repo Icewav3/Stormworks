@@ -83,7 +83,7 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
     elseif is_admin == true then
         if (command == "?restore") then
             if one ~= nil then
-                server.resetVehicleState(one)
+                server.resetVehicleState(one)   
                 print ("Successful, vehicle reset")
             else
                 print("Error: no vehicle ID")
