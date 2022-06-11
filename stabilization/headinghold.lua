@@ -30,7 +30,7 @@ function onTick()
         steer_out = steering
         target = compass
     else
-        steer_out = pid1:run( 0, (target-compass+0.5)%1-0.5)
+        steer_out = pid1:run(0, (target-compass+0.5)%1-0.5)
     end
     output.setNumber(1,steer_out)
 end
