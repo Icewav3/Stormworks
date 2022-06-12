@@ -32,15 +32,15 @@ target_updown = 0
 
 function onTick()
     --inputs
-    pitch_in = input.getNumber(1)
-    pitch_sensor = input.getNumber(2)
-    yaw_in = input.getNumber(3)
-    yaw_sensor = input.getNumber(4)
-    roll_in = input.getNumber(5)
-    roll_sensor = input.getNumber(6)
-    updown_in = input.getNumber(7)
-    updown_sensor = input.getNumber(8)
-    threshold = input.getNumber(9)
+    pitch_in = input.getNumber(1) or 0
+    pitch_sensor = input.getNumber(2) or 0
+    yaw_in = input.getNumber(3) or 0
+    yaw_sensor = input.getNumber(4) or 0
+    roll_in = input.getNumber(5) or 0
+    roll_sensor = input.getNumber(6) or 0
+    updown_in = input.getNumber(7) or 0
+    updown_sensor = input.getNumber(8) or 0
+    threshold = input.getNumber(9) or 0
     --pitch
     if pitchin <= -threshold or pitchin >= threshold then
         pitch_out = pitch_in
