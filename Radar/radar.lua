@@ -2,18 +2,18 @@ function onTick()
     radar = {}
 
     for i = 1, 8 do
-      radar[i * 5 - 4] = input.getBool(i)
+      radar[i * 5 - 4] = input.getBool(i) or 0
       for j = 3, 0, -1 do
-        radar[i * 5 - j] = input.getNumber(i * 4 - j)
+        radar[i * 5 - j] = input.getNumber(i * 4 - j) or 0
       end
     end
-    compass = input.getNumber(4)
-    tiltFront = input.getNumber(8)
-    tiltLeft = input.getNumber(12)
-    tiltUp = input.getNumber(16)
-    gpsx = input.getNumber(20)
-    gpsy = input.getNumber(24)
-    alt = input.getNumber(28)
+    compass = input.getNumber(4) or 0
+    tiltFront = input.getNumber(8) or 0
+    tiltLeft = input.getNumber(12) or 0
+    tiltUp = input.getNumber(16) or 0
+    gpsx = input.getNumber(20) or 0
+    gpsy = input.getNumber(24) or 0
+    alt = input.getNumber(28) or 0
     --constants
     r = (#radar) --array length
     for x=1, (r), 5 do 
