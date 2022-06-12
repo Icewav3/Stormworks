@@ -22,27 +22,56 @@ end
 --constants
 pid1=PID(1, 0.01, 0.1)
 pid2=PID(1, 0.01, 0.1)
-target_h = 0
-target_p = 0
+pid3=PID(1, 0.01, 0.1)
+pid4=PID(1, 0.01, 0.1)
+target_pitch = 0
+target_yaw = 0
+target_roll = 0
+target_updown = 0
+
 function onTick()
-    steering = input.getNumber(1)
-    compass = input.getNumber(2)
-    threshold = input.getNumber(3)
-    tiltsensor = input.getNumber(4)
-    pitchin = input.getNumber(5)
+    --inputs
+    pitch_in = input.getNumber(1)
+    pitch_sensor = input.getNumber(2)
+    yaw_in = input.getNumber(3)
+    yaw_sensor = input.getNumber(4)
+    roll_in = input.getNumber(5)
+    roll_sensor = input.getNumber(6)
+    updown_in = input.getNumber(7)
+    updown_sensor = input.getNumber(8)
+    threshold = input.getNumber(9)
+    --pitch
     if pitchin <= -threshold or pitchin >= threshold then
-        pitch_out = pitchin
-        target_p = tiltsensor
+        pitch_out = pitch_in
+        target_pitch = pitch_sensor
     else
-        pitch_out = pid2:run(0, (target_p-tiltsensor+0.25)%1-0.25)
+        pitch_out = pid1:run(0, (target_pitch-pitch_sensor+0.25)%1-0.25)
     end
-    if steering <= -threshold or steering >= threshold then
-        steer_out = steering
-        target_h = compass
+    --yaw
+    if yaw_in <= -threshold or yaw_in >= threshold then
+        yaw_out = yaw_in
+        target_yaw = yaw_sensor
     else
-        steer_out = pid1:run(0, (target_h-compass+0.5)%1-0.5)
+        yaw_out = pid2:run(0, (target_yaw-yaw_sensor+0.5)%1-0.5)
     end
-    output.setNumber(1,steer_out)
-    output.setNumber(2,pitch_out)
+    --roll
+    if roll_in <= -threshold or roll_in >= threshold then
+        roll_out = roll_in
+        target_roll = roll_sensor
+    else
+        roll_out = pid3:run(0, (target_roll-roll_sensor+0.25)%1-0.25)
+    end
+    --updown
+    if updown_in <= -threshold or updown_in >= threshold then
+        updown_out = updown_in
+        target_updown = updown_sensor
+    else
+        updown_out = pid4:run(target_updown, updown_sensor)
+    end
+    --out
+    output.setNumber(1,pitch_out)
+    output.setNumber(2,yaw_out)
+    output.setNumber(3,roll_out)
+    output.setNumber(4,updown_out)
 end
 --Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issue
