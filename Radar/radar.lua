@@ -17,7 +17,7 @@ function onTick()
     --constants
     r = (#radar) --array length
     for x=1, (r), 5 do 
-        if radar[x] = true then --is something detected?
+        if radar[x] == true then --is something detected?
             distance = radar[x+1]
             --covert to radians
             az_ang = (math.pi*2*radar[x+2])
@@ -36,7 +36,7 @@ function onTick()
             target_x = gpsx + relative_map_x
             target_y = gpsy + relative_map_y
             target_z = alt + relative_altitude
-            
         end
     end
+    output.setBool(1, radar[1])
 end
