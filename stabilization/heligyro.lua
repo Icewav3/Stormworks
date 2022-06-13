@@ -8,7 +8,7 @@ function PID(p, i, d)
         prev_err = 0,
         run = function(self, setpoint, current)
             if current > setpoint * 0.1 + setpoint then
-                self.i_out = 0
+                self.i_out = self.i_out/2
             end
             err = setpoint - current
             p_out = err * self.p
@@ -41,8 +41,9 @@ function onTick()
     updown_in = input.getNumber(7) or 0
     updown_sensor = input.getNumber(8) or 0
     threshold = input.getNumber(9) or 0
+    min_updown = input.getNumber(10) or 0
     --pitch
-    if pitchin <= -threshold or pitchin >= threshold then
+    if pitch_in <= -threshold or pitch_in >= threshold then
         pitch_out = pitch_in
         target_pitch = pitch_sensor
     else
@@ -55,24 +56,19 @@ function onTick()
     else
         yaw_out = pid2:run(0, (target_yaw-yaw_sensor+0.5)%1-0.5)
     end
-    --roll
-    if roll_in <= -threshold or roll_in >= threshold then
-        roll_out = roll_in
-        target_roll = roll_sensor
-    else
-        roll_out = pid3:run(0, (target_roll-roll_sensor+0.25)%1-0.25)
-    end
     --updown
     if updown_in <= -threshold or updown_in >= threshold then
         updown_out = updown_in
         target_updown = updown_sensor
     else
         updown_out = pid4:run(target_updown, updown_sensor)
+        if updown_out < min_updown then
+            updown_out = min_updown
+        end 
     end
     --out
     output.setNumber(1,pitch_out)
     output.setNumber(2,yaw_out)
-    output.setNumber(3,roll_out)
     output.setNumber(4,updown_out)
 end
 --Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issue
