@@ -27,7 +27,6 @@ function onDraw()
     y_offset = y_offset or 0
     x = veh_x + x_offset
     y = veh_y + y_offset
-    screen.drawMap(x, y, zoom)
     north = isPressed and isPointInRectangle(inputX, inputY, 0, 0, s_w, s_h*Uiscale)
     west = isPressed and isPointInRectangle(inputX, inputY, 0, 0, s_w*Uiscale, s_h)
     south = isPressed and isPointInRectangle(inputX, inputY, 0, s_h-(Uiscale*s_h), s_w, s_h*Uiscale)
@@ -55,16 +54,18 @@ function onDraw()
         wp = wp or -1
         wp = wp + 2
         for i = wp, wp+1, 2 do
-            waypoints[i] = inputX
-            waypoints[i+1] = inputY
+            waypoints[i], waypoints[i+1] = map.screenToMap(x, y, Zoom, s_w, s_h, inputX, inputY)
         end
     end
     lastpress = isPressed
+    --draw map
+    screen.drawMap(x, y, zoom)
     --draw wp
     if wp ~= nil then
         for n = 1, #waypoints, 2 do
+            p_x, p_y = map.mapToScreen(x, y, Zoom, s_w, s_h, waypoints[n], waypoints[n+1])
             screen.setColor(255,0,0)
-            screen.drawCircleF(waypoints[n],waypoints[n+1],3)
+            screen.drawCircleF(p_x,p_y,3)
             screen.setColor(255,255,255)
         end
     end
