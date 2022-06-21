@@ -13,7 +13,7 @@ function onTick()
     isPressed = input.getBool(1)
     isPressed2 = input.getBool(2)
     z = input.getNumber(8) or 0
-    Zoom = input.getNumber(7) or 5
+    Zoom = input.getNumber(7) or 1
     output.setBool(1,translate)
     output.setNumber(3,wp)
     output.setNumber(4,#waypoints)
@@ -34,13 +34,13 @@ function onDraw()
     translate = north or west or south or east
     --translate cam
     if north == true then
-        y_offset = y_offset + 1
+        y_offset = y_offset + 1*Zoom+0.1 --funny fix
     elseif south == true then 
-        y_offset = y_offset - 1
+        y_offset = y_offset - 1*Zoom+0.1
     elseif east == true then
-        x_offset = x_offset + 1
+        x_offset = x_offset + 1*Zoom+0.1
     elseif west == true then
-        x_offset = x_offset - 1
+        x_offset = x_offset - 1*Zoom+0.1
     else end
     --reset cam
     if isPressed and isPressed2 then
@@ -59,7 +59,7 @@ function onDraw()
     end
     lastpress = isPressed
     --draw map
-    screen.drawMap(x, y, zoom)
+    screen.drawMap(x, y, Zoom)
     --draw wp
     if wp ~= nil then
         for n = 1, #waypoints, 2 do
