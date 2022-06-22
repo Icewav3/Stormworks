@@ -2,7 +2,30 @@
 function isPointInRectangle(x, y, rectX, rectY, rectW, rectH)
     return x > rectX and y > rectY and x < rectX+rectW and y < rectY+rectH
 end
+function PID(p, i, d)
+    return {
+        p = p,
+        i = i,
+        d = d,
+        i_out = 0,
+        prev_err = 0,
+        run = function(self, setpoint, current)
+            if current > setpoint * 0.1 + setpoint then
+                self.i_out = 0
+            end
+            err = setpoint - current
+            p_out = err * self.p
+            self.i_out = (err * self.i) + self.i_out
+            d_out = (err - self.prev_err) * self.d
+            self.prev_err = err
+            out = p_out + self.i_out + d_out
+            return out
+        end
+    }
+end
 waypoints={}
+pid1=PID(1, 0.01, 0.1)
+pid2=PID(1, 0.01, 0.1)
 function onTick()
     veh_x = input.getNumber(1) or 0
     veh_y = input.getNumber(2) or 0
@@ -17,15 +40,37 @@ function onTick()
     fwd = input.getNumber(9) or 0
     updown = input.getNumber(9) or 0
     if #waypoints > 0 then
-        --GPS CODE
+        if tar_alt ~= nil then
+            num=num or 1
+            for n=num, #waypoints, 2 do
+                tar_x = waypoints[n]
+                tar_y = waypoints[n+1]
+            end
+            xd = tar_x - veh_x
+            yd = tar_y - veh_y
+            if xd < 5 and xd > -5 and yd < 5 and yd > -5 then --close to tar?
+                num=num+2
+            else
+                compass = compass*math.pi*2
+                dist = math.sqrt(yd^2+xd^2)
+                angle = math.atan(yd, xd)
+                yaw_out = pid1:run(angle, compass)
+                updown_out = pid2:run(tar_alt or 100, alt)
+                fwd_out = 1
+            end
+        else
+            tar_alt = alt
+        end
     else
         yaw_out = yaw
         fwd_out = fwd
         updown_out = updown
+        tar_alt = nil
     end
     output.setNumber(1,yaw_out)
     output.setNumber(2,fwd_out)
     output.setNumber(3,updown_out)
+    output.setNumber(4,angle)
 end
 
 function onDraw()
@@ -87,13 +132,5 @@ function onDraw()
             screen.drawCircleF(p_x,p_y,3)
         end
     end
-    
-    
-    
-    
-    --[[screen.drawRectF(0, 0, s_w, s_h*Uiscale)
-    screen.drawRectF(0, 0, s_w*Uiscale, s_h)
-    screen.drawRectF(s_w-(Uiscale*s_w), 0, s_w*Uiscale, s_h)
-    screen.setColor(255, 0, 0)
-    screen.drawRectF(0, s_h-(Uiscale*s_h), s_w, s_h*Uiscale)]]--
 end
+--Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issue
