@@ -8,15 +8,24 @@ function onTick()
     veh_y = input.getNumber(2) or 0
     inputX = input.getNumber(3)
     inputY = input.getNumber(4)
-    inputX2 = input.getNumber(5)
-    inputY2 = input.getNumber(6)
+    compass = input.getNumber(5)
+    alt = input.getNumber(6)
     isPressed = input.getBool(1)
     isPressed2 = input.getBool(2)
-    z = input.getNumber(8) or 0
     Zoom = input.getNumber(7) or 1
-    output.setBool(1,translate)
-    output.setNumber(3,wp)
-    output.setNumber(4,#waypoints)
+    yaw = input.getNumber(8) or 0
+    fwd = input.getNumber(9) or 0
+    updown = input.getNumber(9) or 0
+    if #waypoints > 0 then
+        --GPS CODE
+    else
+        yaw_out = yaw
+        fwd_out = fwd
+        updown_out = updown
+    end
+    output.setNumber(1,yaw_out)
+    output.setNumber(2,fwd_out)
+    output.setNumber(3,updown_out)
 end
 
 function onDraw()
@@ -36,11 +45,11 @@ function onDraw()
     if north == true then
         y_offset = y_offset + 1*Zoom+0.1 --funny fix
     elseif south == true then 
-        y_offset = y_offset - 1*Zoom+0.1
+        y_offset = y_offset - 1*Zoom-0.1
     elseif east == true then
         x_offset = x_offset + 1*Zoom+0.1
     elseif west == true then
-        x_offset = x_offset - 1*Zoom+0.1
+        x_offset = x_offset - 1*Zoom-0.1
     else end
     --reset cam
     if isPressed and isPressed2 then
@@ -60,13 +69,22 @@ function onDraw()
     lastpress = isPressed
     --draw map
     screen.drawMap(x, y, Zoom)
+    screen.setColor(255,0,0,75)
+    veh_x_s, veh_y_s = map.mapToScreen(x, y, Zoom, s_w, s_h, veh_x, veh_y)
+    screen.drawCircleF(veh_x_s,veh_y_s,3) --you
     --draw wp
     if wp ~= nil then
         for n = 1, #waypoints, 2 do
             p_x, p_y = map.mapToScreen(x, y, Zoom, s_w, s_h, waypoints[n], waypoints[n+1])
-            screen.setColor(255,0,0)
+            --draw path
+            if n<=1 then
+                screen.drawLine(veh_x_s, veh_y_s, p_x, p_y)
+            else
+                screen.drawLine(p_x, p_y, last_px, last_py)
+            end
+            last_px = p_x
+            last_py = p_y
             screen.drawCircleF(p_x,p_y,3)
-            screen.setColor(255,255,255)
         end
     end
     
