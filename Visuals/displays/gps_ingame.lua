@@ -3,11 +3,15 @@ function isPointInRectangle(x,y,a,b,c,d)
     return x>a and y>b and x<a+c and y<b+d 
     end
     
-    function PID(e,f,g)return{p=e,i=f,d=g,i_out=0,prev_err=0,run=function(self,h,i)
-    if i>h*0.1+h then
+    function wrap(x,e,f)
+    return(x-e)%(f-e)+e 
+    end
+    
+    function PID(g,h,i)return{p=g,i=h,d=i,i_out=0,prev_err=0,run=function(self,j,k)
+    if k>j*0.1+j then
     self.i_out=0
     end
-    err=h-i
+    err=j-k
     p_out=err*self.p
     self.i_out=err*self.i+self.i_out
     d_out=(err-self.prev_err)*self.d
@@ -35,15 +39,16 @@ function isPointInRectangle(x,y,a,b,c,d)
     if tar_alt~=nil then
     num=num
     or 1
-    for j=num,#waypoints,2 do
-    tar_x=waypoints[j]tar_y=waypoints[j+1]end
+    for l=num,#waypoints,2 do
+    tar_x=waypoints[l]tar_y=waypoints[l+1]end
     xd=tar_x-veh_x
     yd=tar_y-veh_y
     if xd<5 and xd>-5 and yd<5 and yd>-5 then
-    num=num+2 else compass=compass*math.pi*2
-    dist=math.sqrt(yd^2+xd^2)
-    angle=math.atan(yd/xd)
-    yaw_out=pid1:run(angle,compass)
+    num=num+2 else dist=math.sqrt(yd^2+xd^2)
+    compass=(compass*-1+0.5)*2*math.pi
+    target=math.atan(yd,xd)
+    err=target-compass
+    err=wrap(err,-math.pi,math.pi)pid1:run(0,err)
     updown_out=pid2:run(tar_alt or 100,alt)
     fwd_out=1
     end
@@ -57,7 +62,8 @@ function isPointInRectangle(x,y,a,b,c,d)
     output.setNumber(1,yaw_out)
     output.setNumber(2,fwd_out)
     output.setNumber(3,updown_out)
-    output.setNumber(4,dist)
+    output.setNumber(4,target)
+    output.setNumber(5,compass)
     end
     
     function onDraw()
@@ -99,8 +105,8 @@ function isPointInRectangle(x,y,a,b,c,d)
     wp=wp
     or-1
     wp=wp+2
-    for f=wp,wp+1,2 do
-    waypoints[f],waypoints[f+1]=map.screenToMap(x,y,Zoom,s_w,s_h,inputX,inputY)
+    for h=wp,wp+1,2 do
+    waypoints[h],waypoints[h+1]=map.screenToMap(x,y,Zoom,s_w,s_h,inputX,inputY)
     end
     end
     lastpress=isPressed
@@ -108,9 +114,9 @@ function isPointInRectangle(x,y,a,b,c,d)
     screen.setColor(255,0,0,75)veh_x_s,veh_y_s=map.mapToScreen(x,y,Zoom,s_w,s_h,veh_x,veh_y)
     screen.drawCircleF(veh_x_s,veh_y_s,3)
     if wp~=nil then
-    for j=1,#waypoints,2 do
-    p_x,p_y=map.mapToScreen(x,y,Zoom,s_w,s_h,waypoints[j],waypoints[j+1])
-    if j<=1 then
+    for l=1,#waypoints,2 do
+    p_x,p_y=map.mapToScreen(x,y,Zoom,s_w,s_h,waypoints[l],waypoints[l+1])
+    if l<=1 then
     screen.drawLine(veh_x_s,veh_y_s,p_x,p_y)else screen.drawLine(p_x,p_y,last_px,last_py)
     end
     last_px=p_x
@@ -119,4 +125,3 @@ function isPointInRectangle(x,y,a,b,c,d)
     end
     end
     end
---Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issue

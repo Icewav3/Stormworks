@@ -2,6 +2,9 @@
 function isPointInRectangle(x, y, rectX, rectY, rectW, rectH)
     return x > rectX and y > rectY and x < rectX+rectW and y < rectY+rectH
 end
+function wrap(x, min, max)
+    return (x - min) % (max - min) + min
+end
 function PID(p, i, d)
     return {
         p = p,
@@ -51,10 +54,13 @@ function onTick()
             if xd < 5 and xd > -5 and yd < 5 and yd > -5 then --close to tar?
                 num=num+2
             else
-                compass = compass*math.pi*2
                 dist = math.sqrt(yd^2+xd^2)
-                angle = math.atan(yd, xd)
-                yaw_out = pid1:run(angle, compass)
+                compass=(compass*-1+0.5)*2*math.pi
+                target=math.atan(yd,xd)
+                err=target-compass
+                err=wrap(err,-math.pi,math.pi)
+                yaw_out = pid1:run(0,err)
+                yaw_out = yaw_out
                 updown_out = pid2:run(tar_alt or 100, alt)
                 fwd_out = 1
             end
@@ -70,7 +76,8 @@ function onTick()
     output.setNumber(1,yaw_out)
     output.setNumber(2,fwd_out)
     output.setNumber(3,updown_out)
-    output.setNumber(4,angle)
+    output.setNumber(4,target)
+    output.setNumber(5,compass)
 end
 
 function onDraw()
