@@ -1,3 +1,27 @@
+function wrap(x, min, max)
+    return (x - min) % (max - min) + min
+end
+function PID(p, i, d)
+    return {
+        p = p,
+        i = i,
+        d = d,
+        i_out = 0,
+        prev_err = 0,
+        run = function(self, setpoint, current)
+            if current > setpoint * 0.1 + setpoint then
+                self.i_out = 0
+            end
+            err = setpoint - current
+            p_out = err * self.p
+            self.i_out = (err * self.i) + self.i_out
+            d_out = (err - self.prev_err) * self.d
+            self.prev_err = err
+            out = p_out + self.i_out + d_out
+            return out
+        end
+    }
+end
 function onTick()
     veh_x = input.getNumber(1) or 0
     veh_y = input.getNumber(2) or 0

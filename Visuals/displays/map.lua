@@ -2,33 +2,7 @@
 function isPointInRectangle(x, y, rectX, rectY, rectW, rectH)
     return x > rectX and y > rectY and x < rectX+rectW and y < rectY+rectH
 end
-function wrap(x, min, max)
-    return (x - min) % (max - min) + min
-end
-function PID(p, i, d)
-    return {
-        p = p,
-        i = i,
-        d = d,
-        i_out = 0,
-        prev_err = 0,
-        run = function(self, setpoint, current)
-            if current > setpoint * 0.1 + setpoint then
-                self.i_out = 0
-            end
-            err = setpoint - current
-            p_out = err * self.p
-            self.i_out = (err * self.i) + self.i_out
-            d_out = (err - self.prev_err) * self.d
-            self.prev_err = err
-            out = p_out + self.i_out + d_out
-            return out
-        end
-    }
-end
 waypoints={}
-pid1=PID(1, 0.01, 0.1)
-pid2=PID(1, 0.01, 0.1)
 function onTick()
     veh_x = input.getNumber(1) or 0
     veh_y = input.getNumber(2) or 0
@@ -39,45 +13,21 @@ function onTick()
     isPressed = input.getBool(1)
     isPressed2 = input.getBool(2)
     Zoom = input.getNumber(7) or 1
-    yaw = input.getNumber(8) or 0
-    fwd = input.getNumber(9) or 0
-    updown = input.getNumber(9) or 0
+    wp_num = 2*input.getNumber(8) or 0
     if #waypoints > 0 then
-        if tar_alt ~= nil then
-            num=num or 1
-            for n=num, #waypoints, 2 do
-                tar_x = waypoints[n]
-                tar_y = waypoints[n+1]
-            end
-            xd = tar_x - veh_x
-            yd = tar_y - veh_y
-            if xd < 5 and xd > -5 and yd < 5 and yd > -5 then --close to tar?
-                num=num+2
+        for n = wp_num, wp_num+2, 1 do
+            if n%2 == 1 then
+                x=waypoints[n]
             else
-                dist = math.sqrt(yd^2+xd^2)
-                compass=(compass*-1+0.5)*2*math.pi
-                target=math.atan(yd,xd)
-                err=target-compass
-                err=wrap(err,-math.pi,math.pi)
-                yaw_out = pid1:run(0,err)
-                yaw_out = yaw_out
-                updown_out = pid2:run(tar_alt or 100, alt)
-                fwd_out = 1
+                y=waypoints[n]
             end
-        else
-            tar_alt = alt
         end
     else
-        yaw_out = yaw
-        fwd_out = fwd
-        updown_out = updown
-        tar_alt = nil
+        x=0
+        y=0
     end
-    output.setNumber(1,yaw_out)
-    output.setNumber(2,fwd_out)
-    output.setNumber(3,updown_out)
-    output.setNumber(4,target)
-    output.setNumber(5,compass)
+    output.setNumber(1,x)
+    output.setNumber(2,y)
 end
 
 function onDraw()
