@@ -3,6 +3,9 @@ function isPointInRectangle(x, y, rectX, rectY, rectW, rectH)
     return x > rectX and y > rectY and x < rectX+rectW and y < rectY+rectH
 end
 waypoints={}
+r=255
+g=0
+b=0
 function onTick()
     veh_x = input.getNumber(1) or 0
     veh_y = input.getNumber(2) or 0
@@ -71,7 +74,7 @@ function onDraw()
     lastpress = isPressed
     --draw map
     screen.drawMap(x, y, Zoom)
-    screen.setColor(255,0,0,75)
+    screen.setColor(r,g,b,75)
     veh_x_s, veh_y_s = map.mapToScreen(x, y, Zoom, s_w, s_h, veh_x, veh_y)
     screen.drawCircleF(veh_x_s,veh_y_s,3) --you
     --draw wp
