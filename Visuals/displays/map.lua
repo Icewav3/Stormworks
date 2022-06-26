@@ -1,4 +1,4 @@
---functions
+--v 1.0
 function isPointInRectangle(x, y, rectX, rectY, rectW, rectH)
     return x > rectX and y > rectY and x < rectX+rectW and y < rectY+rectH
 end
