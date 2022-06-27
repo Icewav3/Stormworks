@@ -1,16 +1,7 @@
 function wrap(x, min, max)
     return (x - min) % (max - min) + min
 end
-function within(x,target,range)
-    x=math.abs(x)
-    target=math.abs(target)
-    if x < target+range then
-      out=true
-    else
-      out=false
-    end
-    return out
-end
+function within(current,target,range) return math.abs(target-current)<range end
 function PID(p, i, d)
     return {
         p = p,
@@ -38,7 +29,7 @@ pi=math.pi
 function onTick()
     veh_x=input.getNumber(1)
     veh_y=input.getNumber(2)
-    compass=input.getNumber(3)
+    compass=((input.getNumber(3) or 0)*-1+.5)*2*pi
     tar_x=input.getNumber(4)or 0
     tar_y=input.getNumber(5)or 0
     alt=input.getNumber(6)or 0
@@ -54,7 +45,7 @@ function onTick()
         target_alt=alt
         wp_num=0
     else
-arrive = within(veh_x,tar_x,25) and within(veh_y,tar_y,25)
+arrive = within(veh_x,tar_x,50) and within(veh_y,tar_y,50)
 if arrive and not last then
     wp_num=wp_num+1
 else end
@@ -62,10 +53,8 @@ last=arrive
 xdiff=tar_x-veh_x
 ydiff=tar_y-veh_y
 distance=math.sqrt(ydiff^2+xdiff^2)
-angle=math.atan(ydiff, xdiff)
-heading=wrap(compass*180/pi,0,pi*2)
-angle=wrap(angle,-0.5,0.5)
-yaw=pid1:run(0, (angle-compass+0.5)%1-0.5)
+angle=math.atan(xdiff, ydiff)
+yaw=pid1:run(0, wrap(angle-compass,-pi,pi))
         up=pid2:run(target_alt, alt)
         fwd=1
         ETA=distance/speed
@@ -73,7 +62,7 @@ yaw=pid1:run(0, (angle-compass+0.5)%1-0.5)
     output.setNumber(1,wp_num)
     output.setNumber(2,yaw)
     output.setNumber(3,fwd)
-    output.setNumber(4,up)
-    output.setNumber(5,angle)
+    output.setNumber(4,compass)
+    output.setNumber(5,math.deg(angle or 0))
 end
 --Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issues

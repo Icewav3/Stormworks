@@ -41,21 +41,20 @@ function onDraw()
     y_offset = y_offset or 0
     x = veh_x + x_offset
     y = veh_y + y_offset
-    north = isPressed and isPointInRectangle(inputX, inputY, 0, 0, s_w, s_h*Uiscale)
-    west = isPressed and isPointInRectangle(inputX, inputY, 0, 0, s_w*Uiscale, s_h)
-    south = isPressed and isPointInRectangle(inputX, inputY, 0, s_h-(Uiscale*s_h), s_w, s_h*Uiscale)
-    east = isPressed and isPointInRectangle(inputX, inputY, s_w-(Uiscale*s_w), 0, s_w*Uiscale, s_h)
+    north = isPressed and inputY<s_h*Uiscale
+    west = isPressed and inputX<s_w*Uiscale
+    south = isPressed and inputY>s_h-s_h*Uiscale
+    east = isPressed and inputX>s_w-s_w*Uiscale
     translate = north or west or south or east
     --translate cam
     if north == true then
-        y_offset = y_offset + 1*Zoom+0.1 --funny fix
+        y_offset = y_offset + 1*Zoom+0.1 
     elseif south == true then 
-        y_offset = y_offset - 1*Zoom-0.1
-    elseif east == true then
+        y_offset = y_offset - 1*Zoom-0.1 end
+    if east == true then
         x_offset = x_offset + 1*Zoom+0.1
     elseif west == true then
-        x_offset = x_offset - 1*Zoom-0.1
-    else end
+        x_offset = x_offset - 1*Zoom-0.1 end
     --reset cam
     if isPressed and isPressed2 then
         x_offset = 0
