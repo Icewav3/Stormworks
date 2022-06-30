@@ -1,9 +1,1 @@
-function within(x,target,range)
-    x=math.abs(x)
-    if x < target+range then
-      out=true
-    else
-      out=false
-    end
-    return out
-end
+function within(current,target,range) return math.abs(target-current)<range end
