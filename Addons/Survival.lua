@@ -1,4 +1,16 @@
---v 1.2
+--v 1.3
+
+----------------------------------------------------------------------
+-- Exposed Properties
+----------------------------------------------------------------------
+function onCreate()
+    if is_world_create then
+        property.checkbox("Override to hard settings?", false)
+    end
+end
+----------------------------------------------------------------------
+-- Utility Functions
+----------------------------------------------------------------------
 function getSteamID(peer_id)
     local player_list =  server.getPlayers()
     for peer_index, peer in pairs(player_list) do
@@ -21,7 +33,9 @@ function onPlayerJoin(steam_id, name, peer_id, admin, auth)
     print(name .. " has no bitches")
     end
 end
---DISASTER WARNINGS
+----------------------------------------------------------------------
+-- Disaster Warnings
+----------------------------------------------------------------------
 function onTornado(transform)
     print("Tornado imminent")
 end
@@ -46,7 +60,10 @@ function onPlayerDie(steam_id, name, peer_id, is_admin, is_auth)
     print(name .. " has a massive skill issue")
 end
 
---write
+----------------------------------------------------------------------
+-- Vehicle logging Functions
+----------------------------------------------------------------------
+
 g_savedata = {
     spawned_vehicles = {}
 }
@@ -74,6 +91,10 @@ end
 function onVehicleDespawn(vehicle_id, peer_id)
     g_savedata.spawned_vehicles[vehicle_id] = nil
 end
+
+----------------------------------------------------------------------
+-- Custom Command Handling
+----------------------------------------------------------------------
 
 function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command, one, two, three, four, five)
 
@@ -148,4 +169,3 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
     end
 end
 --Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issues
---Huge thanks to Toastery#2075 for helping me with this!
