@@ -1,4 +1,4 @@
---DEPRECATED
+--v 1.0
 function PID(p, i, d)
     return {
         p = p,
