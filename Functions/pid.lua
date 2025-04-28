@@ -6,14 +6,15 @@ function PID(p, i, d)
         i_out = 0,
         prev_err = 0,
         run = function(self, min_setpoint, setpoint, current)
+            local out = 0
             if setpoint > min_setpoint then
                 if current > setpoint * 0.1 + setpoint then
                     self.i_out = 0
                 end
-                err = setpoint - current
-                p_out = err * self.p
+                local err = setpoint - current
+                local p_out = err * self.p
                 self.i_out = (err * self.i) + self.i_out
-                d_out = (err - self.prev_err) * self.d
+                local d_out = (err - self.prev_err) * self.d
                 self.prev_err = err
                 out = p_out + self.i_out + d_out
             end
