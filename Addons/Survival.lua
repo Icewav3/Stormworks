@@ -175,3 +175,4 @@ function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command,
     end
 end
 --Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issues
+

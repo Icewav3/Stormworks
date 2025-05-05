@@ -24,12 +24,13 @@ function PID(p, i, d)
         end
     }
 end
+
 function clamp(x, min, max)
     return math.max(min, math.min(max, x))
 end
 
---constants
-P = property.getNumber("P") or 1
+-- constants
+P = property.getNumber("P") or 0.1
 I = property.getNumber("I") or 0.01
 D = property.getNumber("D") or 0.1
 sensitivity = property.getNumber("Sensitivity") or 0.1
@@ -45,21 +46,24 @@ end
 
 pid1 = PID(P, I, D)
 
-
 -- tick
 function onTick()
-    current_input = input.getNumber(1)
-    current_altitude = input.getNumber(2)
+    local current_input = input.getNumber(1)
+    local current_altitude = input.getNumber(2)
 
+    if target_altitude == nil then
+        target_altitude = current_altitude
+    end
     -- Main logic
+    local control_axis_out
     if math.abs(current_input) > sensitivity then
         control_axis_out = current_input
         target_altitude = current_altitude
     else
-        -- alt hold
         control_axis_out = pid1:run(min_setpoint, target_altitude, current_altitude)
     end
-    --out
+
     output.setNumber(1, clamp(control_axis_out, min_clamp, 1))
 end
---Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issue
+
+-- Report bugs/suggestions to Icewave#0394 on discord or https://github.com/Icewav3/Stormworks/issue
