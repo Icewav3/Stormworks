@@ -27,7 +27,7 @@ function onTick()
             compass = compass*math.pi*2
             --make inputs reliable
             HorizontalAngle = -( horizontalradar*math.cos(tiltLeft) - verticalradar*math.sin(tiltLeft) + compass)
-            VerticalAngle =  ( horizontalradar*math.sin(tiltLeft)  + verticalradar*math.cos(tiltLeft)) + tiltFront
+            VerticalAngle =  ( horizontalradar*math.sin(tiltLeft) + verticalradar*math.cos(tiltLeft)) + tiltFront
             --get relative position
             relative_map_x = distance*math.sin(az_ang)*math.cos(elev_ang)
             relative_altitude = distance*math.sin(elevation)
